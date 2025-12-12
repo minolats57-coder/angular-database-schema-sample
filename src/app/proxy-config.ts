@@ -8,7 +8,7 @@
 export const proxyConfig = {
   // Set to empty string to use direct API calls (may fail due to CORS)
   // Set to your proxy server URL to use proxy (recommended for production)
-  proxyUrl: '',
+  proxyUrl: 'https://angular-database-schema-sample.up.railway.app',
   
   // Example proxy server URLs:
   // - http://localhost:3001 (local development)
