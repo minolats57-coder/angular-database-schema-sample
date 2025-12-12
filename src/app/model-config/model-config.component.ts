@@ -1,6 +1,8 @@
-import { Component, ElementRef, OnInit, viewChild } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { FormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
 import { LogService } from '../log.service';
-import { GeminiService } from '../gemini.service';
+import { OpenAiService } from '../openai.service';
 import { HelpfulLabelComponent } from '../helpful-label/helpful-label.component';
 
 @Component({
@@ -8,19 +10,19 @@ import { HelpfulLabelComponent } from '../helpful-label/helpful-label.component'
   templateUrl: './model-config.component.html',
   styleUrl: './model-config.component.scss',
   standalone: true,
-  imports: [HelpfulLabelComponent]
+  imports: [HelpfulLabelComponent, FormsModule, CommonModule]
 })
 export class ModelConfigComponent implements OnInit {
-  protected modelVersion = viewChild.required<ElementRef<HTMLInputElement>>('modelVersion');
-  protected apiKey = viewChild.required<ElementRef<HTMLInputElement>>('apiKey');
+  protected apiKey: string = '';
+  protected baseUrl: string = 'https://http.openai-gpt-oss-120b-proxy.yotta-infrastructure.on-prem.clusters.s9t.link';
+  protected model: string = 'openai/gpt-oss-120b';
+  protected headersId: string = '524436ef-5d4c-4d55-9351-71d67036b92b';
+  protected isConfigured: boolean = false;
 
   constructor(
     private log: LogService,
-    protected gemini: GeminiService,
+    protected openAi: OpenAiService,
   ) { }
-
-  // https://ai.google.dev/gemini-api/docs/models/gemini#model-versions
-  defaultModelVersion = "gemini-1.5-flash-latest";
 
   systemInstruction = `You are an AI database agent.
 
@@ -47,20 +49,23 @@ authors, members, and loans, return 4 tables: one each for books, authors,
 members, and loans.`;
 
   ngOnInit(): void {
-    // Set initial values that are hard-coded in the HTML.
+    // Configure with default values
     this.configure();
   }
 
   configure() {
-    const modelVersion = this.modelVersion().nativeElement.value;
-    const apiKey = this.apiKey().nativeElement.value
-    if (modelVersion && apiKey) {
-      this.gemini.configure(modelVersion, apiKey);
+    if (this.apiKey && this.baseUrl && this.model) {
+      const config = {
+        apiKey: this.apiKey,
+        baseUrl: this.baseUrl,
+        model: this.model,
+        defaultHeaders: this.headersId ? { "id": this.headersId } : undefined
+      };
+      this.openAi.configure(config);
+      this.openAi.setSystemInstruction(this.systemInstruction);
+      this.isConfigured = true;
+      this.log.info('GPT-OSS-120B configured');
     }
-  }
-
-  setSystemInstruction(systemInstruction: string) {
-    this.gemini.setSystemInstruction(systemInstruction);
   }
 
 }

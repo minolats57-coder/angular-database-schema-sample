@@ -1,0 +1,46 @@
+<div class="sqlitecloud-config">
+  <h3>SQLiteCloud Integration</h3>
+  
+  <div class="form-group">
+    <label for="connectionString">SQLiteCloud Connection String</label>
+    <textarea 
+      id="connectionString" 
+      [(ngModel)]="connectionString"
+      placeholder="sqlitecloud://host:port/database?apikey=YOUR_API_KEY"
+      class="form-input"
+      rows="3"></textarea>
+    <p class="hint">Format: sqlitecloud://host:port/database?apikey=YOUR_API_KEY</p>
+  </div>
+
+  <div class="status-section">
+    <p class="status" [class.connected]="isConnected" [class.disconnected]="!isConnected">
+      Status: {{ isConnected ? 'Connected' : 'Disconnected' }}
+    </p>
+    
+    <div class="message" *ngIf="statusMessage">
+      {{ statusMessage }}
+    </div>
+  </div>
+
+  <div class="button-section">
+    <button 
+      *ngIf="!isConnected" 
+      (click)="connectToCloud()" 
+      [disabled]="isConnecting || !connectionString"
+      class="connect-btn">
+      {{ isConnecting ? 'Connecting...' : 'Connect to SQLiteCloud' }}
+    </button>
+    
+    <button 
+      *ngIf="isConnected" 
+      (click)="disconnect()" 
+      class="disconnect-btn">
+      Disconnect
+    </button>
+  </div>
+
+  <div class="info-section" *ngIf="isConnected">
+    <p>✓ Your database schema will be synchronized with SQLiteCloud.</p>
+    <p>✓ All table creation and alterations will be reflected in the cloud database.</p>
+  </div>
+</div>

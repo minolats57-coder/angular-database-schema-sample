@@ -1,0 +1,126 @@
+.sqlitecloud-config {
+  padding: 1.5rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  background-color: #f9f9f9;
+  margin: 1rem 0;
+
+  h3 {
+    margin-top: 0;
+    color: #333;
+    border-bottom: 2px solid #28a745;
+    padding-bottom: 0.5rem;
+  }
+
+  .form-group {
+    margin: 1rem 0;
+    display: flex;
+    flex-direction: column;
+
+    label {
+      font-weight: 500;
+      margin-bottom: 0.5rem;
+      color: #333;
+    }
+
+    .form-input {
+      padding: 0.75rem;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+      font-family: 'Courier New', monospace;
+      font-size: 0.85rem;
+      background-color: white;
+      
+      &:focus {
+        outline: none;
+        border-color: #28a745;
+        box-shadow: 0 0 5px rgba(40, 167, 69, 0.25);
+      }
+    }
+
+    .hint {
+      margin: 0.5rem 0 0 0;
+      font-size: 0.8rem;
+      color: #666;
+    }
+  }
+
+  .status-section {
+    margin: 1rem 0;
+
+    .status {
+      font-weight: bold;
+      margin: 0.5rem 0;
+      padding: 0.5rem;
+      border-radius: 4px;
+
+      &.connected {
+        color: #155724;
+        background-color: #d4edda;
+      }
+
+      &.disconnected {
+        color: #721c24;
+        background-color: #f8d7da;
+      }
+    }
+
+    .message {
+      margin-top: 0.5rem;
+      padding: 0.5rem;
+      background-color: #e7f3ff;
+      border-left: 4px solid #0066cc;
+      border-radius: 4px;
+    }
+  }
+
+  .button-section {
+    margin: 1rem 0;
+
+    button {
+      padding: 0.5rem 1rem;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      font-size: 0.9rem;
+      font-weight: 500;
+      margin-right: 0.5rem;
+
+      &:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+      }
+
+      &.connect-btn {
+        background-color: #007bff;
+        color: white;
+
+        &:hover:not(:disabled) {
+          background-color: #0056b3;
+        }
+      }
+
+      &.disconnect-btn {
+        background-color: #6c757d;
+        color: white;
+
+        &:hover {
+          background-color: #545b62;
+        }
+      }
+    }
+  }
+
+  .info-section {
+    margin-top: 1rem;
+    padding: 0.5rem;
+    background-color: #e7f3ff;
+    border-radius: 4px;
+
+    p {
+      margin: 0.25rem 0;
+      font-size: 0.9rem;
+      color: #004085;
+    }
+  }
+}

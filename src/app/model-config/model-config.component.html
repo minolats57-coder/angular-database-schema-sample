@@ -1,34 +1,57 @@
 <div class="section">
-    <app-helpful-label for="modelVersion" label="Model version">
-        Specify a <a target="_blank" href="https://ai.google.dev/gemini-api/docs/models/gemini#model-versions">model
-            version</a>
-        such as <code class="example">{{defaultModelVersion}}</code>.
+    <app-helpful-label for="apiKey" label="API Key (JWT Token)">
+        Enter your JWT token for the GPT-OSS-120B model.
     </app-helpful-label>
 
-    <input id="modelVersion" #modelVersion size="40" class="code" required (change)="configure()"
-        [value]="defaultModelVersion">
+    <input id="apiKey" type="password" size="40" [(ngModel)]="apiKey" 
+        placeholder="Paste in your JWT token" class="code" required (change)="configure()">
 </div>
 
 <!-- ---------------------------------------------------------------------- -->
 
 <div class="section">
-    <app-helpful-label for="apiKey" label="API Key">
-        To obtain an API key, visit
-        <a target="_blank" href="https://aistudio.google.com/">Google AI Studio</a> and click <b>Get API key</b>.
+    <app-helpful-label for="baseUrl" label="Base URL">
+        The API endpoint for GPT-OSS-120B proxy service.
     </app-helpful-label>
 
-    <input id="apiKey" #apiKey size="40" placeholder="Paste in your Gemini API key" class="code" required
-        (change)="configure()" value="">
+    <input id="baseUrl" type="text" size="60" [(ngModel)]="baseUrl" 
+        placeholder="API base URL" class="code" required (change)="configure()">
+</div>
+
+<!-- ---------------------------------------------------------------------- -->
+
+<div class="section">
+    <app-helpful-label for="model" label="Model Name">
+        The model identifier (e.g., openai/gpt-oss-120b).
+    </app-helpful-label>
+
+    <input id="model" type="text" size="40" [(ngModel)]="model" 
+        placeholder="Model name" class="code" required (change)="configure()">
+</div>
+
+<!-- ---------------------------------------------------------------------- -->
+
+<div class="section">
+    <app-helpful-label for="headersId" label="Custom Header ID (Optional)">
+        Custom ID for the request headers.
+    </app-helpful-label>
+
+    <input id="headersId" type="text" size="60" [(ngModel)]="headersId" 
+        placeholder="Custom ID header" class="code" (change)="configure()">
 </div>
 
 <!-- ---------------------------------------------------------------------- -->
 
 <div class="section">
     <app-helpful-label for="systemInstructionInput" label="System Instructions">
-        Update these <a target="_blank" href="https://ai.google.dev/gemini-api/docs/system-instructions">system
-            instructions</a>
-        to affect model behavior and help improve responses.
+        Update these system instructions to affect model behavior and help improve responses.
     </app-helpful-label>
-    <textarea (change)="setSystemInstruction(systemInstructionInput.value)"
-        #systemInstructionInput>{{systemInstruction}}</textarea>
+    <textarea #systemInstructionInput [(ngModel)]="systemInstruction" 
+        (change)="openAi.setSystemInstruction(systemInstructionInput.value)">{{systemInstruction}}</textarea>
+</div>
+
+<!-- ---------------------------------------------------------------------- -->
+
+<div class="section" *ngIf="isConfigured">
+    <p class="status-success">✓ GPT-OSS-120B is configured and ready</p>
 </div>

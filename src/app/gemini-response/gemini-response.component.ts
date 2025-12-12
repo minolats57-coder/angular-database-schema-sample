@@ -1,5 +1,5 @@
-import { AfterContentInit, AfterViewChecked, AfterViewInit, Component, ElementRef, viewChild } from '@angular/core';
-import { GeminiService } from '../gemini.service';
+import { AfterViewChecked, Component, ElementRef, viewChild } from '@angular/core';
+import { OpenAiService } from '../openai.service';
 import { LogService } from '../log.service';
 import { HelpfulLabelComponent } from '../helpful-label/helpful-label.component';
 
@@ -15,13 +15,13 @@ export class GeminiResponseComponent implements AfterViewChecked {
 
   constructor(
     private log: LogService,
-    protected gemini: GeminiService,
+    protected openAi: OpenAiService,
   ) { }
 
   scrolled = false;
 
   ngAfterViewChecked(): void {
-    if (!this.gemini.lastResponse || this.gemini.lastResponse.type == "none") {
+    if (!this.openAi.lastResponse || this.openAi.lastResponse.type == "none") {
       return;
     }
 

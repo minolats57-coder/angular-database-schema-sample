@@ -19,6 +19,8 @@
     "@angular/platform-browser-dynamic": "^18.0.4",
     "@angular/router": "^18.0.4",
     "@google/generative-ai": "^0.14.1",
+    "@sqlitecloud/drivers": "^1.0.653",
+    "firebase": "^12.6.0",
     "rxjs": "~7.8.0",
     "tslib": "^2.3.0",
     "zone.js": "~0.14.2"

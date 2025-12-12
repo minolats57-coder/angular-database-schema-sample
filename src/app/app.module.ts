@@ -14,6 +14,7 @@
 
 import { ErrorHandler, NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
+import { FormsModule } from '@angular/forms';
 
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { AppRoutingModule } from './app-routing.module';
@@ -25,18 +26,23 @@ import { ErrorHandlerModule } from './error-handler/error-handler.module';
 import { ModelConfigComponent } from './model-config/model-config.component';
 import { GeminiResponseComponent } from './gemini-response/gemini-response.component';
 import { DbSchemaComponent } from './db-schema/db-schema.component';
+import { SQLiteCloudConfigComponent } from './sqlitecloud-config/sqlitecloud-config.component';
+import { AuthComponent } from './auth/auth.component';
 
 @NgModule({
   declarations: [AppComponent],
   imports: [
     AppRoutingModule,
     BrowserModule,
+    FormsModule,
     DbPanelComponent,
     DbSchemaComponent,
     DbTableComponent,
     DivConsoleComponent,
     GeminiResponseComponent,
     ModelConfigComponent,
+    SQLiteCloudConfigComponent,
+    AuthComponent,
   ],
   providers: [{ provide: ErrorHandler, useClass: ErrorHandlerModule }, provideAnimationsAsync()],
   bootstrap: [AppComponent],

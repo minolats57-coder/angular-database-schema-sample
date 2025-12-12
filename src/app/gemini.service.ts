@@ -92,16 +92,17 @@ export class GeminiService {
       const calls = result.response.functionCalls();
       if (calls) {
         this.log.info("Received", calls.length, "function calls.");
-        const success = calls.every((fc, i) => {
+        const results = await Promise.all(calls.map(async (fc) => {
           this.log.info("Received function call response:", fc);
-          const err = this.database.callFunction(fc);
+          const err = await this.database.callFunction(fc);
           if (err) {
             this.log.error("Error calling function: " + fc.name, err);
             return false;
           }
           this.log.info("Successfully called function " + fc.name);
           return true;
-        });
+        }));
+        const success = results.every(r => r === true);
         this.lastResponse = {
           type: success ? "functionCalls" : "invalidFunctionCalls",
           response: JSON.stringify(calls, null, 2),

@@ -14,6 +14,7 @@
 
 import { Injectable } from '@angular/core';
 import { LogService } from './log.service';
+import { SQLiteCloudService } from './sqlitecloud.service';
 import { FunctionCall } from '@google/generative-ai';
 
 export const ColumnTypeValues = ['string', 'integer', 'date'] as const;
@@ -48,23 +49,39 @@ interface alterTableArgs {
   providedIn: 'root'
 })
 export class DatabaseService {
+  cloudEnabled = false;
 
   constructor(
     private log: LogService,
+    private sqliteCloud: SQLiteCloudService,
   ) { }
 
   tables: Table[] = [];
 
-  createTable(log: LogService, table: Table) {
+  async initializeCloud(): Promise<boolean> {
+    const connected = await this.sqliteCloud.connect();
+    this.cloudEnabled = connected;
+    return connected;
+  }
+
+  async createTable(log: LogService, table: Table) {
     log.info("Creating table", table);
     this.tables.push(table);
+    
+    if (this.cloudEnabled) {
+      try {
+        await this.sqliteCloud.createTable(table.tableName, table.columns);
+      } catch (error) {
+        log.error("Failed to create table in SQLiteCloud:", error);
+      }
+    }
   }
 
   getOrMakeTable(tableName: string): Table {
     return this.tables.find(t => t.tableName == tableName) || {} as Table;
   }
 
-  alterTable(log: LogService, args: alterTableArgs) {
+  async alterTable(log: LogService, args: alterTableArgs) {
     log.info("Altering table", args);
     const table = this.getOrMakeTable(args.tableName);
 
@@ -79,6 +96,14 @@ export class DatabaseService {
           table.columns.splice(i, 1);
         }
       });
+      
+      if (this.cloudEnabled) {
+        try {
+          await this.sqliteCloud.alterTableRemoveColumns(args.tableName, args.removeColumns);
+        } catch (error) {
+          log.error("Failed to remove columns in SQLiteCloud:", error);
+        }
+      }
     }
 
     // Alter existing columns.
@@ -98,6 +123,14 @@ export class DatabaseService {
         this.log.debug("ALTER TABLE", args.tableName, "ADD COLUMN", col.columnName, "TYPE", col.columnType);
         table.columns.push(col);
       });
+      
+      if (this.cloudEnabled) {
+        try {
+          await this.sqliteCloud.alterTableAddColumns(args.tableName, args.addColumns);
+        } catch (error) {
+          log.error("Failed to add columns in SQLiteCloud:", error);
+        }
+      }
     }
   }
 
@@ -106,13 +139,13 @@ export class DatabaseService {
     alterTable: this.alterTable,
   };
 
-  callFunction(fc: FunctionCall) : Error | undefined {
+  async callFunction(fc: FunctionCall) : Promise<Error | undefined> {
     const f = this.dbfunctions[fc.name];
     if (!f) {
       return Error("Model requested call to non-existant function: " + fc.name);
     }
     try {
-      f.apply(this, [this.log, fc.args]);
+      await f.apply(this, [this.log, fc.args]);
       return undefined;
     } catch(e) {
       return Error("Failed to call requested funciton " + fc.name, {cause: e});
