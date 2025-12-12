@@ -1,0 +1,12 @@
+{
+  "name": "Database Schema Creator Proxy",
+  "description": "API proxy server for SQLiteCloud and OpenAI integration",
+  "repository": "https://github.com/google-gemini/angular-database-schema-sample",
+  "keywords": ["proxy", "api", "sqlitecloud", "openai", "nodejs"],
+  "env": {
+    "PORT": {
+      "description": "Port to run the proxy server on",
+      "value": "3001"
+    }
+  }
+}
